@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Material Visual — Festival de los Grandes Clásicos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --gold:        #c9a84c;
+      --gold-light:  #e8d5a0;
+      --gold-dark:   #8b6914;
+      --cream:       #f5f0e8;
+      --dark:        #1a1510;
+      --dark-warm:   #3a2e20;
+      --burgundy:    #5c1a2e;
+      --divider:     rgba(201,168,76,0.35);
+      --cell-ref:    rgba(173,210,230,0.12);
+      --cell-opt:    rgba(180,210,180,0.10);
+      --font-display: 'Cinzel', serif;
+      --font-body:    'Cormorant Garamond', serif;
+      --font-italic:  'EB Garamond', serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--dark);
+      color: var(--cream);
+      font-family: var(--font-body);
+      font-size: 22px;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: linear-gradient(to bottom, rgba(20,15,10,0.97), rgba(20,15,10,0.85));
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--divider);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 2.5rem;
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.27rem;
+      letter-spacing: 0.25em;
+      color: var(--gold-light);
+      text-transform: uppercase;
+      line-height: 1.4;
+    }
+    .nav-logo span {
+      display: block;
+      font-size: 1rem;
+      color: var(--gold);
+      letter-spacing: 0.35em;
+      opacity: 0.8;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2.2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      text-decoration: none;
+      opacity: 0.75;
+      transition: opacity 0.25s, color 0.25s;
+    }
+    .nav-links a:hover { opacity: 1; color: var(--gold); }
+    .nav-links a.active { opacity: 1; color: var(--gold); border-bottom: 2px solid var(--gold); padding-bottom: 2px; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding: 7rem 2.5rem 2.5rem;
+      text-align: center;
+      background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.07) 0%, transparent 60%),
+                  linear-gradient(180deg, #0e0b07 0%, #1a1510 100%);
+      border-bottom: 1px solid var(--divider);
+    }
+    .page-header .eyebrow {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.7;
+      margin-bottom: 0.8rem;
+    }
+    .page-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      color: var(--gold-light);
+    }
+    .page-header p {
+      font-family: var(--font-italic);
+      font-style: italic;
+      font-size: 1.3rem;
+      color: var(--gold-light);
+      opacity: 0.55;
+      margin-top: 0.6rem;
+    }
+
+    /* ── TOOLBAR ── */
+    .toolbar {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--divider);
+    }
+    .toolbar-label {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.7;
+      margin-right: 0.5rem;
+    }
+    .btn {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.5rem 1.4rem;
+      border: 1px solid var(--gold-dark);
+      background: rgba(201,168,76,0.07);
+      color: var(--gold-light);
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .btn:hover { background: rgba(201,168,76,0.15); border-color: var(--gold); }
+    .btn.danger { border-color: var(--burgundy); color: #c07080; }
+    .btn.danger:hover { background: rgba(92,26,46,0.2); }
+
+    /* ── TABLE WRAPPER ── */
+    .table-wrap {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    /* Column widths */
+    col.col-musica      { width: 260px; }
+    col.col-personaje   { width: 180px; }
+    col.col-disciplina  { width: 180px; }
+    col.col-referencia  { width: 220px; }
+    col.col-opcion      { width: 220px; }
+    col.col-actions     { width: 60px; }
+
+    /* Header row */
+    thead tr th {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      padding: 0.9rem 0.8rem;
+      border: 1px solid var(--divider);
+      background: rgba(201,168,76,0.06);
+      text-align: center;
+      vertical-align: middle;
+      position: relative;
+      white-space: nowrap;
+    }
+    thead tr th .th-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    thead tr th[contenteditable="true"]:focus {
+      outline: 1px solid var(--gold);
+      background: rgba(201,168,76,0.12);
+    }
+    .th-del-col {
+      font-size: 0.75rem;
+      opacity: 0;
+      cursor: pointer;
+      color: #c07080;
+      transition: opacity 0.2s;
+      flex-shrink: 0;
+    }
+    thead tr th:hover .th-del-col { opacity: 1; }
+
+    /* Data rows */
+    tbody tr {
+      transition: background 0.2s;
+    }
+    tbody tr:hover { background: rgba(201,168,76,0.03); }
+
+    tbody td {
+      border: 1px solid var(--divider);
+      padding: 0.6rem 0.7rem;
+      vertical-align: top;
+    }
+
+    /* Text cells (personaje, disciplina) */
+    td.text-cell {
+      font-size: 1.3rem;
+      color: var(--gold-light);
+      line-height: 1.4;
+    }
+    td.text-cell[contenteditable="true"] {
+      outline: none;
+      min-height: 2rem;
+    }
+    td.text-cell[contenteditable="true"]:focus {
+      background: rgba(201,168,76,0.07);
+      outline: 1px solid var(--gold-dark);
+    }
+
+    /* Personaje / Disciplina cells — blue tint, centrado vertical */
+    td.cell-personaje  { background: rgba(173,210,230,0.07); vertical-align: middle; }
+    td.cell-disciplina { vertical-align: middle; }
+    /* Referencia cells — slightly blue */
+    td.cell-referencia { background: rgba(173,210,230,0.05); }
+    /* Opcion cells — slight green tint */
+    td.cell-opcion { background: rgba(180,210,180,0.05); }
+
+    /* ── MÚSICA CELL ── */
+    td.cell-musica {
+      background: rgba(173,210,230,0.07);
+      padding: 0.7rem 0.6rem;
+      vertical-align: top;
+    }
+
+    .audio-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .audio-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: 0.5rem 0.6rem;
+      border: 1px solid var(--divider);
+      border-radius: 2px;
+      background: rgba(255,255,255,0.02);
+      position: relative;
+    }
+
+    .audio-item-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.4rem;
+    }
+
+    .audio-item-name {
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--gold-light);
+      opacity: 0.8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+      outline: none;
+      cursor: text;
+    }
+    .audio-item-name:focus {
+      opacity: 1;
+      border-bottom: 1px solid var(--gold-dark);
+    }
+
+    .audio-del {
+      background: none;
+      border: none;
+      color: #c07080;
+      font-size: 0.75rem;
+      cursor: pointer;
+      opacity: 0.4;
+      padding: 0 0.2rem;
+      transition: opacity 0.15s;
+      flex-shrink: 0;
+    }
+    .audio-item:hover .audio-del { opacity: 0.9; }
+
+    /* Native audio — styled as minimal */
+    .audio-item audio {
+      width: 100%;
+      height: 28px;
+      outline: none;
+      filter: sepia(0.6) brightness(0.85) hue-rotate(10deg);
+    }
+
+    /* Add audio button inside cell */
+    .add-audio-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      width: 100%;
+      margin-top: 0.3rem;
+      padding: 0.35rem 0;
+      background: none;
+      border: 1px dashed rgba(201,168,76,0.2);
+      border-radius: 2px;
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.5;
+      cursor: pointer;
+      transition: opacity 0.2s, border-color 0.2s;
+    }
+    .add-audio-btn:hover { opacity: 0.9; border-color: var(--gold); }
+    .add-audio-btn input[type="file"] { display: none; }
+
+    /* Image drop zone */
+    .img-zone {
+      width: 100%;
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed rgba(201,168,76,0.25);
+      border-radius: 2px;
+      cursor: pointer;
+      position: relative;
+      transition: border-color 0.2s, background 0.2s;
+      overflow: hidden;
+    }
+    .img-zone:hover { border-color: var(--gold); background: rgba(201,168,76,0.04); }
+    .img-zone.has-image { border-style: solid; border-color: rgba(201,168,76,0.3); }
+
+    /* El input solo se activa programáticamente — no cubre la zona */
+    .img-zone input[type="file"] {
+      display: none;
+    }
+
+    .img-zone img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    .img-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      pointer-events: none; /* el click lo captura .img-zone directamente */
+    }
+    .img-placeholder svg { opacity: 0.3; }
+    .img-placeholder span {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.5;
+    }
+
+    /* Image overlay controls */
+    .img-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(10,8,5,0.82);
+      display: none;
+      flex-direction: column;
+      gap: 0.3rem;
+      padding: 0.4rem 0.5rem;
+    }
+    .img-zone.has-image:hover .img-overlay { display: flex; }
+    .img-overlay .img-name {
+      font-size: 0.75rem;
+      font-family: var(--font-display);
+      color: var(--gold-light);
+      opacity: 0.8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: 0.05em;
+      outline: none;
+    }
+    .img-overlay .img-name:focus {
+      opacity: 1;
+      border-bottom: 1px solid var(--gold);
+    }
+    .img-overlay .img-actions {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .img-action-btn {
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.5rem;
+      border: 1px solid;
+      border-radius: 2px;
+      cursor: pointer;
+      background: none;
+    }
+    .img-action-btn.change { border-color: var(--gold-dark); color: var(--gold); }
+    .img-action-btn.remove { border-color: var(--burgundy); color: #c07080; }
+    .img-action-btn.change:hover { background: rgba(201,168,76,0.15); }
+    .img-action-btn.remove:hover { background: rgba(92,26,46,0.25); }
+
+    /* Row delete button */
+    td.cell-actions {
+      text-align: center;
+      vertical-align: middle;
+      padding: 0.4rem;
+    }
+    .row-del {
+      background: none;
+      border: none;
+      color: #c07080;
+      font-size: 1.1rem;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.2s;
+      padding: 0.3rem;
+    }
+    tbody tr:hover .row-del { opacity: 0.7; }
+    .row-del:hover { opacity: 1 !important; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #0a0806;
+      border-top: 1px solid var(--divider);
+      text-align: center;
+      padding: 3rem 2rem;
+      margin-top: 4rem;
+    }
+    footer .footer-logo {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      letter-spacing: 0.3em;
+      color: var(--gold-light);
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+    footer .footer-sub {
+      font-family: var(--font-italic);
+      font-style: italic;
+      font-size: 1.45rem;
+      color: var(--gold);
+      opacity: 0.5;
+      margin-bottom: 1.5rem;
+    }
+    footer p {
+      font-size: 1.27rem;
+      color: var(--gold-light);
+      opacity: 0.3;
+      letter-spacing: 0.1em;
+    }
+
+    .ornament {
+      display: block;
+      text-align: center;
+      color: var(--gold);
+      font-size: 1.4rem;
+      letter-spacing: 0.4em;
+      margin: 1.2rem 0;
+      opacity: 0.7;
+    }
+
+    /* Drag-over highlight */
+    .img-zone.drag-over {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.08);
+    }
+
+    /* Cursor pointer sobre imagen cargada */
+    .img-zone.has-image img { cursor: zoom-in; }
+
+    /* ── LIGHTBOX ── */
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(10, 8, 5, 0.93);
+      align-items: center;
+      justify-content: center;
+      animation: lbFadeIn 0.2s ease;
+    }
+    #lightbox.open {
+      display: flex;
+    }
+    @keyframes lbFadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    #lightbox img {
+      width: 85vw;
+      height: 80vh;
+      object-fit: contain;
+      border: 1px solid var(--divider);
+      box-shadow: 0 0 60px rgba(0,0,0,0.8);
+      animation: lbZoomIn 0.22s ease;
+      background: rgba(0,0,0,0.3);
+    }
+    @keyframes lbZoomIn {
+      from { transform: scale(0.93); opacity: 0; }
+      to   { transform: scale(1);    opacity: 1; }
+    }
+    #lightbox-caption {
+      position: absolute;
+      bottom: 2rem;
+      left: 0; right: 0;
+      text-align: center;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.6;
+    }
+    #lightbox-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 2rem;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      letter-spacing: 0.2em;
+      color: var(--gold-light);
+      opacity: 0.5;
+      cursor: pointer;
+      background: none;
+      border: none;
+      text-transform: uppercase;
+      transition: opacity 0.2s;
+    }
+    #lightbox-close:hover { opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">
+      Festival de los Grandes Clásicos
+      <span>Alina Abreu Conservatorio de Danzas</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Contexto</a></li>
+      <li><a href="index.html">Repertorio</a></li>
+      <li><a href="index.html">Flujo</a></li>
+      <li><a href="index.html">Reglas</a></li>
+      <li><a href="index.html">Riesgos</a></li>
+      <li><a href="index.html">Checklist</a></li>
+      <li><a href="material.html" class="active">Material</a></li>
+      <li><a href="bonus.html">Bonus 😊</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <p class="eyebrow">Festival de los Grandes Clásicos</p>
+    <h1>Material Visual</h1>
+    <p>Referencias e imágenes por pieza — editable</p>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <span class="toolbar-label">Tabla:</span>
+    <button class="btn" onclick="addRow()">+ Agregar fila</button>
+    <button class="btn" onclick="addOptionColumn()">+ Agregar opción</button>
+    <button class="btn danger" onclick="confirmClear()">Limpiar todo</button>
+    <span style="margin-left:auto;font-family:var(--font-display);font-size:0.9rem;letter-spacing:0.15em;color:var(--gold);opacity:0.5;text-transform:uppercase">
+      Los nombres de columnas son editables · Haz clic en una celda para editar
+    </span>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <table id="materialTable">
+      <colgroup id="colgroup">
+        <col class="col-musica" />
+        <col class="col-personaje" />
+        <col class="col-disciplina" />
+        <col class="col-referencia" />
+        <col class="col-opcion" />
+        <col class="col-opcion" />
+        <col class="col-opcion" />
+        <col class="col-actions" />
+      </colgroup>
+      <thead>
+        <tr id="headerRow">
+          <th><div class="th-inner"><span contenteditable="true" spellcheck="false">Música</span></div></th>
+          <th><div class="th-inner"><span contenteditable="true" spellcheck="false">Personaje</span></div></th>
+          <th><div class="th-inner"><span contenteditable="true" spellcheck="false">Disciplina</span></div></th>
+          <th><div class="th-inner"><span contenteditable="true" spellcheck="false">Referencia</span></div></th>
+          <th><div class="th-inner"><span contenteditable="true" spellcheck="false">Opción 1</span><button class="th-del-col" onclick="deleteColumn(this)" title="Eliminar columna">✕</button></div></th>
+          <th><div class="th-inner"><span contenteditable="true" spellcheck="false">Opción 2</span><button class="th-del-col" onclick="deleteColumn(this)" title="Eliminar columna">✕</button></div></th>
+          <th><div class="th-inner"><span contenteditable="true" spellcheck="false">Opción 3</span><button class="th-del-col" onclick="deleteColumn(this)" title="Eliminar columna">✕</button></div></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- rows populated by JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <span class="ornament" style="margin:2rem 0">— ✦ —</span>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox">
+    <button id="lightbox-close" onclick="closeLightbox()">✕ &nbsp; Cerrar</button>
+    <img id="lightbox-img" src="" alt="" />
+    <p id="lightbox-caption"></p>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p class="footer-logo">Alina Abreu Conservatorio de Danzas</p>
+    <p class="footer-sub">Festival de los Grandes Clásicos</p>
+    <span class="ornament" style="opacity:0.3">✦ &nbsp; ✦ &nbsp; ✦</span>
+    <p>Av. Sarasota No. 79, Bella Vista · Santo Domingo, República Dominicana</p>
+    <p style="margin-top:0.4rem">Producción visual — Dirección escénica digital</p>
+  </footer>
+
+  <script>
+    // ─────────────────────────────────────────
+    //  STATE
+    // ─────────────────────────────────────────
+    // optionCount: how many "option" columns exist (after Personaje, Disciplina, Referencia)
+    let optionCount = 3;
+
+    // Default rows (from the Google Sheet screenshot)
+    const DEFAULT_ROWS = [
+      { personaje: 'Nadia',                         disciplina: 'Gimnasia Rítmica' },
+      { personaje: 'Annie',                          disciplina: 'Teatro Musical' },
+      { personaje: 'Danza Española. El Cascanueces', disciplina: 'Danza Española' },
+      { personaje: 'Danza Española. Lago De los Cisnes', disciplina: 'Danza Española' },
+      { personaje: 'La Boda de Luis Alonso',         disciplina: 'Danza Española' },
+      { personaje: 'Feel the Groove',                disciplina: 'Jazz / Hip Hop' },
+      { personaje: 'Urban Soul',                     disciplina: 'Jazz / Hip Hop' },
+      { personaje: 'Luz del Camino',                 disciplina: 'Lírico C.' },
+      { personaje: 'Vals. Coppelia',                 disciplina: 'PB-I' },
+      { personaje: 'Princesas de Esmeralda. La Bella Durmiente', disciplina: 'PB-I/II' },
+      { personaje: 'Tarantella. El lago de Los cisnes', disciplina: 'PB-II/III' },
+      { personaje: 'Vals. El lago de Los Cisnes',    disciplina: 'PB-III/IV' },
+      { personaje: 'Vals. La Bella Durmiente',       disciplina: 'PB-IV/1er/2do' },
+      { personaje: 'Vals De Las Flores. El Cascanueces', disciplina: '3ro' },
+      { personaje: 'Vals De Las Horas. Coppelia',    disciplina: '' },
+      { personaje: 'Don Quijote. Variacion Mercedes', disciplina: '' },
+      { personaje: 'Satanella',                      disciplina: '' },
+      { personaje: 'Carmen. Variacion Habanera',     disciplina: '' },
+      { personaje: 'Don Quijote. Variacion Kitry',   disciplina: '' },
+      { personaje: 'El Corsario. Esclavas',          disciplina: 'Avanzado' },
+    ];
+
+    // ─────────────────────────────────────────
+    //  BUILD TABLE
+    // ─────────────────────────────────────────
+    function init() {
+      DEFAULT_ROWS.forEach(r => addRow(r.personaje, r.disciplina));
+    }
+
+    function addRow(personaje = '', disciplina = '') {
+      const tbody = document.getElementById('tableBody');
+      const tr = document.createElement('tr');
+      tr.innerHTML = buildRowHTML(personaje, disciplina);
+      tbody.appendChild(tr);
+      attachRowEvents(tr);
+    }
+
+    function buildRowHTML(personaje, disciplina) {
+      let html = `
+        <td class="cell-musica">${audioListHTML()}</td>
+        <td class="text-cell cell-personaje" contenteditable="true" spellcheck="false">${personaje}</td>
+        <td class="text-cell cell-disciplina" contenteditable="true" spellcheck="false">${disciplina}</td>
+        <td class="cell-referencia">${imgZoneHTML('Referencia')}</td>`;
+      for (let i = 0; i < optionCount; i++) {
+        html += `<td class="cell-opcion">${imgZoneHTML('Opción ' + (i + 1))}</td>`;
+      }
+      html += `<td class="cell-actions"><button class="row-del" onclick="deleteRow(this)" title="Eliminar fila">✕</button></td>`;
+      return html;
+    }
+
+    function audioListHTML() {
+      return `
+        <div class="audio-list"></div>
+        <button class="add-audio-btn" onclick="triggerAudioAdd(this)">
+          <input type="file" accept="audio/*" multiple onchange="handleAudioSelect(this)" />
+          + Agregar música
+        </button>`;
+    }
+
+    function triggerAudioAdd(btn) {
+      btn.querySelector('input[type="file"]').click();
+    }
+
+    function handleAudioSelect(input) {
+      const files = Array.from(input.files);
+      const list  = input.closest('td').querySelector('.audio-list');
+      files.forEach(file => addAudioItem(list, file));
+      input.value = '';
+    }
+
+    function addAudioItem(list, file) {
+      const url  = URL.createObjectURL(file);
+      const name = file.name.replace(/\.[^.]+$/, '');
+      const item = document.createElement('div');
+      item.className = 'audio-item';
+      item.innerHTML = `
+        <div class="audio-item-header">
+          <span class="audio-item-name" contenteditable="true" spellcheck="false">${name}</span>
+          <button class="audio-del" onclick="removeAudioItem(this, event)" title="Borrar">✕</button>
+        </div>
+        <audio controls src="${url}"></audio>`;
+      list.appendChild(item);
+    }
+
+    function removeAudioItem(btn, e) {
+      e.stopPropagation();
+      if (!confirm('¿Borrar esta pista de audio?')) return;
+      const item = btn.closest('.audio-item');
+      // revoke blob url to free memory
+      const audio = item.querySelector('audio');
+      if (audio) URL.revokeObjectURL(audio.src);
+      item.remove();
+    }
+
+    function imgZoneHTML(label) {
+      return `
+        <div class="img-zone" data-label="${label}">
+          <input type="file" accept="image/*" onchange="handleFileSelect(this)" />
+          <div class="img-placeholder">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            <span>${label}</span>
+          </div>
+          <div class="img-overlay">
+            <span class="img-name" contenteditable="true" spellcheck="false"></span>
+            <div class="img-actions">
+              <button class="img-action-btn change" onclick="triggerChange(this, event)">Cambiar</button>
+              <button class="img-action-btn remove" onclick="removeImage(this, event)">Borrar</button>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function attachRowEvents(tr) {
+      tr.querySelectorAll('.img-zone').forEach(zone => {
+        // Drag-and-drop
+        zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+        zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+        zone.addEventListener('drop', e => {
+          e.preventDefault();
+          zone.classList.remove('drag-over');
+          const file = e.dataTransfer.files[0];
+          if (file && file.type.startsWith('image/')) loadImage(zone, file);
+        });
+
+        // Click en zona vacía → abrir file picker
+        // Click en zona con imagen → abrir lightbox (el listener está en el <img>)
+        zone.addEventListener('click', e => {
+          if (!zone.classList.contains('has-image')) {
+            zone.querySelector('input[type="file"]').click();
+          }
+        });
+      });
+    }
+
+    // ─────────────────────────────────────────
+    //  IMAGE HANDLING
+    // ─────────────────────────────────────────
+    function handleFileSelect(input) {
+      const file = input.files[0];
+      if (!file) return;
+      const zone = input.closest('.img-zone');
+      loadImage(zone, file);
+    }
+
+    function loadImage(zone, file) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        // Remove placeholder, insert image
+        zone.querySelector('.img-placeholder').style.display = 'none';
+        // Remove old img if any
+        const oldImg = zone.querySelector('img');
+        if (oldImg) oldImg.remove();
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        // Click en la imagen abre el lightbox
+        img.addEventListener('click', ev => {
+          ev.stopPropagation();
+          const name = zone.querySelector('.img-name').textContent.trim();
+          openLightbox(img.src, name);
+        });
+        zone.insertBefore(img, zone.querySelector('.img-overlay'));
+        // Set name
+        zone.querySelector('.img-name').textContent = file.name.replace(/\.[^.]+$/, '');
+        zone.classList.add('has-image');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // ─────────────────────────────────────────
+    //  LIGHTBOX
+    // ─────────────────────────────────────────
+    function openLightbox(src, caption) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox-caption').textContent = caption || '';
+      document.getElementById('lightbox').classList.add('open');
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.getElementById('lightbox-img').src = '';
+    }
+
+    // Cerrar con clic en el fondo o con Escape
+    document.getElementById('lightbox').addEventListener('click', e => {
+      if (e.target === document.getElementById('lightbox')) closeLightbox();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeLightbox();
+    });
+
+    function triggerChange(btn, e) {
+      if (e) e.stopPropagation();
+      const zone = btn.closest('.img-zone');
+      zone.querySelector('input[type="file"]').click();
+    }
+
+    function removeImage(btn, e) {
+      if (e) e.stopPropagation();
+      if (!confirm('¿Borrar esta imagen?')) return;
+      const zone = btn.closest('.img-zone');
+      const img = zone.querySelector('img');
+      if (img) img.remove();
+      zone.querySelector('.img-placeholder').style.display = '';
+      zone.querySelector('.img-name').textContent = '';
+      zone.classList.remove('has-image');
+      // reset file input
+      const input = zone.querySelector('input[type="file"]');
+      input.value = '';
+    }
+
+    // ─────────────────────────────────────────
+    //  ROW / COLUMN MANAGEMENT
+    // ─────────────────────────────────────────
+    function deleteRow(btn) {
+      const tr = btn.closest('tr');
+      if (confirm('¿Eliminar esta fila?')) tr.remove();
+    }
+
+    function addOptionColumn() {
+      optionCount++;
+      const colgroup = document.getElementById('colgroup');
+      // Insert before the last col (actions)
+      const actionsCol = colgroup.lastElementChild;
+      const newCol = document.createElement('col');
+      newCol.className = 'col-opcion';
+      colgroup.insertBefore(newCol, actionsCol);
+
+      // Add header cell
+      const headerRow = document.getElementById('headerRow');
+      const actionsTh = headerRow.lastElementChild;
+      const th = document.createElement('th');
+      th.innerHTML = `<div class="th-inner"><span contenteditable="true" spellcheck="false">Opción ${optionCount}</span><button class="th-del-col" onclick="deleteColumn(this)" title="Eliminar columna">✕</button></div>`;
+      headerRow.insertBefore(th, actionsTh);
+
+      // Add cell to each row
+      document.querySelectorAll('#tableBody tr').forEach(tr => {
+        const actionsTd = tr.lastElementChild;
+        const td = document.createElement('td');
+        td.className = 'cell-opcion';
+        td.innerHTML = imgZoneHTML('Opción ' + optionCount);
+        tr.insertBefore(td, actionsTd);
+        attachRowEvents(tr);
+      });
+    }
+
+    function deleteColumn(btn) {
+      const th = btn.closest('th');
+      const headerRow = document.getElementById('headerRow');
+      const allTh = Array.from(headerRow.children);
+      const colIndex = allTh.indexOf(th);
+
+      if (!confirm('¿Eliminar esta columna?')) return;
+
+      // Remove header cell
+      th.remove();
+
+      // Remove corresponding cell from each row
+      document.querySelectorAll('#tableBody tr').forEach(tr => {
+        const cells = tr.children;
+        if (cells[colIndex]) cells[colIndex].remove();
+      });
+
+      // Remove col from colgroup
+      const colgroup = document.getElementById('colgroup');
+      if (colgroup.children[colIndex]) colgroup.children[colIndex].remove();
+
+      optionCount--;
+    }
+
+    function confirmClear() {
+      if (confirm('¿Limpiar toda la tabla? Se perderán las imágenes cargadas.')) {
+        document.getElementById('tableBody').innerHTML = '';
+        optionCount = 3;
+        // Restore header to default
+        document.getElementById('headerRow').innerHTML = `
+          <th><div class="th-inner"><span contenteditable="true" spellcheck="false">Música</span></div></th>
+          <th><div class="th-inner"><span contenteditable="true" spellcheck="false">Personaje</span></div></th>
+          <th><div class="th-inner"><span contenteditable="true" spellcheck="false">Disciplina</span></div></th>
+          <th><div class="th-inner"><span contenteditable="true" spellcheck="false">Referencia</span></div></th>
+          <th><div class="th-inner"><span contenteditable="true" spellcheck="false">Opción 1</span><button class="th-del-col" onclick="deleteColumn(this)" title="Eliminar columna">✕</button></div></th>
+          <th><div class="th-inner"><span contenteditable="true" spellcheck="false">Opción 2</span><button class="th-del-col" onclick="deleteColumn(this)" title="Eliminar columna">✕</button></div></th>
+          <th><div class="th-inner"><span contenteditable="true" spellcheck="false">Opción 3</span><button class="th-del-col" onclick="deleteColumn(this)" title="Eliminar columna">✕</button></div></th>
+          <th></th>`;
+        init();
+      }
+    }
+
+    // ─────────────────────────────────────────
+    //  BOOT
+    // ─────────────────────────────────────────
+    init();
+  </script>
+</body>
+</html>
